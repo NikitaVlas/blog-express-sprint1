@@ -1,7 +1,9 @@
 pnpm init
 
 Установка зависимостей
+
 pnpm add express
+
 pnpm add -D typescript @types/express jest ts-jest @types/jest @types/node supertest @types/supertest eslint @typescript-eslint/eslint-plugin @typescript-eslint/parser prettier eslint-config-prettier eslint-plugin-prettier nodemon
 
 typescript - язык программирования, являющийся надмножеством JavaScript, добавляющий статическую типизацию. Мы используем TypeScript для написания более безопасного и масштабируемого кода с использованием типов.
