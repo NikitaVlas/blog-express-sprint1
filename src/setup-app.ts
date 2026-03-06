@@ -1,4 +1,5 @@
 import express, { Express } from "express";
+import { videosRoutes } from "./routes/videos.routes";
 
 export const setupApp = (app: Express) => {
     app.use(express.json()); // middleware для парсинга JSON в теле запроса
@@ -8,6 +9,7 @@ export const setupApp = (app: Express) => {
         res.status(200).send("Hello world!");
     });
 
+    app.use("/videos", videosRoutes);
 
     return app;
 };
