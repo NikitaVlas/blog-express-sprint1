@@ -1,15 +1,21 @@
 import express, { Express } from "express";
 import { videosRoutes } from "./routes/videos.routes";
+import { testingRoutes } from "./routes/testing.routes";
+
+export const RouterPaths = {
+  videos: "/videos",
+  testing: "/testing",
+};
 
 export const setupApp = (app: Express) => {
-    app.use(express.json()); // middleware для парсинга JSON в теле запроса
+  app.use(express.json());
 
-    // основной роут
-    app.get("/", (req, res) => {
-        res.status(200).send("Hello world!");
-    });
+  app.get("/", (_req, res) => {
+    res.status(200).send("Hello world!");
+  });
 
-    app.use("/videos", videosRoutes);
+  app.use(RouterPaths.videos, videosRoutes);
+  app.use(RouterPaths.testing, testingRoutes);
 
-    return app;
+  return app;
 };
