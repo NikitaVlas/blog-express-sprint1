@@ -4,6 +4,8 @@ import {UpdateVideoInputModel} from "../types/video.types";
 
 export const videosRoutes = Router();
 
+let nextVideoId = 1;
+
 videosRoutes
     .get("/", (_req: Request, res: Response) => {
         res.status(200).json(db.videos);
@@ -51,8 +53,21 @@ videosRoutes
         return res.sendStatus(204);
     })
 
-    .post("/:id", (req: Request, res: Response) => {
+    .post("/", (req: Request, res: Response) => {
+        const input = req.body;
+        const now = new Date();
 
-    })
+        const newVideo = {
+            id: nextVideoId++,
+            title: input.title.trim(),
+            author: input.author.trim(),
+            canBeDownloaded: false,
+            minAgeRestriction: null,
+            createdAt: now.toISOString(),
+            publicationDate: input.publicationDate,
+            availableResolutions: input.availableResolutions,
+        };
 
-
+        db.videos.push(newVideo);
+        return res.status(201).json(newVideo);
+    });
