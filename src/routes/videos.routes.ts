@@ -1,6 +1,7 @@
 import {Request, Response, Router} from "express";
 import {db} from "../db/database.db";
 import {UpdateVideoInputModel} from "../types/video.types";
+import {sendValidationError, validateCreateInput, validateUpdateInput} from "../drivers/validation/inputValidation";
 
 export const videosRoutes = Router();
 
@@ -42,6 +43,11 @@ videosRoutes
             return res.sendStatus(404);
         }
 
+        const errors = validateUpdateInput(req.body);
+        if (errors.length > 0) {
+            return sendValidationError(res, errors);
+        }
+
         const input = req.body as UpdateVideoInputModel;
         video.title = input.title.trim();
         video.author = input.author.trim();
@@ -54,6 +60,11 @@ videosRoutes
     })
 
     .post("/", (req: Request, res: Response) => {
+        const errors = validateCreateInput(req.body);
+        if (errors.length > 0) {
+            return sendValidationError(res, errors);
+        }
+
         const input = req.body;
         const now = new Date();
 
