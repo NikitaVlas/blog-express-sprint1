@@ -1,18 +1,22 @@
-import {Request, Response, Router} from "express";
-import {db} from "../db/database.db";
-import {UpdateVideoInputModel} from "../types/video.types";
-import {sendValidationError, validateCreateInput, validateUpdateInput} from "../drivers/validation/inputValidation";
+import { Router } from "express";
+import { db } from "../db/database.db";
+import { UpdateVideoInputModel } from "../types/video.types";
+import {
+    sendValidationError,
+    validateCreateInput,
+    validateUpdateInput,
+} from "../drivers/validation/inputValidation";
 
 export const videosRoutes = Router();
 
 let nextVideoId = 1;
 
 videosRoutes
-    .get("/", (_req: Request, res: Response) => {
+    .get("/", (_req, res) => {
         res.status(200).json(db.videos);
     })
 
-    .get("/:id", (req: Request, res: Response) => {
+    .get("/:id", (req, res) => {
         const id = Number(req.params.id);
         const video = db.videos.find((video) => video.id === id);
 
@@ -23,7 +27,7 @@ videosRoutes
         return res.status(200).json(video);
     })
 
-    .delete("/:id", (req: Request, res: Response) => {
+    .delete("/:id", (req, res) => {
         const id = Number(req.params.id);
         const index = db.videos.findIndex((video) => video.id === id);
 
@@ -35,7 +39,7 @@ videosRoutes
         return res.sendStatus(204);
     })
 
-    .put("/:id", (req: Request, res: Response) => {
+    .put("/:id", (req, res) => {
         const id = Number(req.params.id);
         const video = db.videos.find((video) => video.id === id);
 
@@ -59,7 +63,7 @@ videosRoutes
         return res.sendStatus(204);
     })
 
-    .post("/", (req: Request, res: Response) => {
+    .post("/", (req, res) => {
         const errors = validateCreateInput(req.body);
         if (errors.length > 0) {
             return sendValidationError(res, errors);

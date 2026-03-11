@@ -6,7 +6,10 @@ setupApp(app);
 
 const PORT = process.env.PORT || 5001;
 
-// запуск приложения
-app.listen(PORT, () => {
-    console.log(`Example app listening on port ${PORT}`);
-});
+if (!process.env.VERCEL) {
+    app.listen(PORT, () => {
+        console.log(`Example app listening on port ${PORT}`);
+    });
+}
+
+export default app;

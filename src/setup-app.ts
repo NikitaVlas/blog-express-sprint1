@@ -1,4 +1,4 @@
-import express, { Express } from "express";
+import express from "express";
 import { videosRoutes } from "./routes/videos.routes";
 import { testingRoutes } from "./routes/testing.routes";
 
@@ -7,7 +7,7 @@ export const RouterPaths = {
   testing: "/testing",
 };
 
-export const setupApp = (app: Express) => {
+export const setupApp = (app: express.Application) => {
   app.use(express.json());
 
   app.get("/", (_req, res) => {

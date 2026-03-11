@@ -1,4 +1,3 @@
-import { Response } from "express";
 import {
     APIErrorResult,
     CreateVideoInputModel,
@@ -6,6 +5,12 @@ import {
     Resolution,
     UpdateVideoInputModel
 } from "../../types/video.types";
+
+type ValidationErrorResponse = {
+    status: (statusCode: number) => {
+        json: (body: APIErrorResult) => unknown;
+    };
+};
 
 export const isNonEmptyString = (value: unknown): value is string =>
     typeof value === "string" && value.trim().length > 0;
@@ -24,7 +29,7 @@ const isResolution = (value: unknown): value is Resolution =>
 const isValidResolutionsArray = (value: unknown): value is Resolution[] =>
     Array.isArray(value) && value.length > 0 && value.every(isResolution);
 
-export const sendValidationError = (res: Response, errors: FieldError[]) => {
+export const sendValidationError = (res: ValidationErrorResponse, errors: FieldError[]) => {
     const body: APIErrorResult = { errorsMessages: errors };
     return res.status(400).json(body);
 };
