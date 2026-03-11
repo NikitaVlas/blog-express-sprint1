@@ -1,22 +1,43 @@
 import { Router } from "express";
 import { db } from "../db/database.db";
-import { UpdateVideoInputModel } from "../types/video.types";
+import {
+    Resolution,
+    UpdateVideoInputModel,
+} from "../types/video.types";
 import {
     sendValidationError,
     validateCreateInput,
     validateUpdateInput,
 } from "../drivers/validation/inputValidation";
 
+type RouteRequest = {
+    body: unknown;
+    params: Record<string, string | undefined>;
+};
+
+type RouteResponse = {
+    status: (statusCode: number) => RouteResponse;
+    json: (body: unknown) => unknown;
+    sendStatus: (statusCode: number) => unknown;
+};
+
+type CreateVideoBody = {
+    title: string;
+    author: string;
+    publicationDate: string;
+    availableResolutions: Resolution[];
+};
+
 export const videosRoutes = Router();
 
 let nextVideoId = 1;
 
 videosRoutes
-    .get("/", (_req, res) => {
+    .get("/", (_req: RouteRequest, res: RouteResponse) => {
         res.status(200).json(db.videos);
     })
 
-    .get("/:id", (req, res) => {
+    .get("/:id", (req: RouteRequest, res: RouteResponse) => {
         const id = Number(req.params.id);
         const video = db.videos.find((video) => video.id === id);
 
@@ -27,7 +48,7 @@ videosRoutes
         return res.status(200).json(video);
     })
 
-    .delete("/:id", (req, res) => {
+    .delete("/:id", (req: RouteRequest, res: RouteResponse) => {
         const id = Number(req.params.id);
         const index = db.videos.findIndex((video) => video.id === id);
 
@@ -39,7 +60,7 @@ videosRoutes
         return res.sendStatus(204);
     })
 
-    .put("/:id", (req, res) => {
+    .put("/:id", (req: RouteRequest, res: RouteResponse) => {
         const id = Number(req.params.id);
         const video = db.videos.find((video) => video.id === id);
 
@@ -63,13 +84,13 @@ videosRoutes
         return res.sendStatus(204);
     })
 
-    .post("/", (req, res) => {
+    .post("/", (req: RouteRequest, res: RouteResponse) => {
         const errors = validateCreateInput(req.body);
         if (errors.length > 0) {
             return sendValidationError(res, errors);
         }
 
-        const input = req.body;
+        const input = req.body as CreateVideoBody;
         const now = new Date();
 
         const newVideo = {
