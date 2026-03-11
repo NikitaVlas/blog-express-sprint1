@@ -24,7 +24,6 @@ type RouteResponse = {
 type CreateVideoBody = {
     title: string;
     author: string;
-    publicationDate: string;
     availableResolutions: Resolution[];
 };
 
@@ -92,6 +91,8 @@ videosRoutes
 
         const input = req.body as CreateVideoBody;
         const now = new Date();
+        const publicationDate = new Date(now);
+        publicationDate.setDate(publicationDate.getDate() + 1);
 
         const newVideo = {
             id: nextVideoId++,
@@ -100,7 +101,7 @@ videosRoutes
             canBeDownloaded: false,
             minAgeRestriction: null,
             createdAt: now.toISOString(),
-            publicationDate: input.publicationDate,
+            publicationDate: publicationDate.toISOString(),
             availableResolutions: input.availableResolutions,
         };
 
